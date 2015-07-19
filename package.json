@@ -1,0 +1,42 @@
+{
+  "name": "stock-watch",
+  "version": "0.1.0",
+  "description": "For the watch of Stock, Realtime stock price fetcher from global markets including China",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "bin": {
+    "sw": "bin/sw.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/camsong/stock-watch.git"
+  },
+  "files": [
+    ".eslintrc",
+    "index.js",
+    "bin",
+    "src"
+  ],
+  "keywords": [
+    "Realtime",
+    "Stock",
+    "Price",
+    "Global Markets",
+    "China Stock"
+  ],
+  "author": "Cam Song",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/camsong/stock-watch/issues"
+  },
+  "homepage": "https://github.com/camsong/stock-watch#readme",
+  "dependencies": {
+    "babel": "~5.6.23",
+    "express": "~4.13.1",
+    "request": "^2.58.0",
+    "tough-cookie": "^2.0.0",
+    "vow": "^0.4.10"
+  }
+}
