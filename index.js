@@ -1,1 +1,2 @@
-//require('./server.js');
+require('babel/register');
+module.exports = require('./src/fetcher.js');
