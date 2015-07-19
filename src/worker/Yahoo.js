@@ -34,17 +34,51 @@ class Yahoo {
     return symbol;
   }
 
+  static rollbackSymbol(symbol) {
+    if (/^\d+\.ss$/gi.test(symbol)) {
+      return 'SH' + /^(\d+)\.ss$/gi.exec(symbol)[1];
+    }
+    // shenzhen
+    if (/^SZ\d+$/gi.test(symbol)) {
+      return /^SZ(\d+)$/gi.exec(symbol)[1] + '.sz';
+    }
+    // hongkong
+    if (/^HK\d+$/gi.test(symbol)) {
+      return /^HK(\d+)$/gi.exec(symbol)[1] + '.hk';
+    }
+    return symbol;
+  }
+
+  _convertExchange(exchange) {
+    switch(exchange) {
+      case 'NYQ':
+        return 'NYSE';
+       case 'NMS':
+        return 'NASDAQ';
+      default:
+        return exchange;
+    }
+  }
+
   formatRealtimeData(csvData) {
-    const arr = csvData.split('\n');
-    let result = [];
+    const arr = csvData.split('\n').filter(line => line.length > 0);
+    let result = {};
     arr.forEach(item => {
       const values = item.split(',').map(val => {
-        return val === 'N/A' ? null: val;
+        // two types: string and number, if "BABA" as a string, 123 as a number
+        if(val === 'N/A') return null;
+        if (/^\".*\"$/g.test(val)) {
+          // "BABA" => BABA
+          return val.slice(1, val.length - 1);
+        } else {
+          return parseFloat(val);
+        }
       });
+      const symbol = this.constructor.rollbackSymbol(values[0]);
       // TODO parseFloat
-      result.push({
-        symbol: values[0],
-        exchange: values[9], // stock's exchange; NYQ->NYSE
+      result[symbol] = {
+        symbol: symbol,
+        exchange: this._convertExchange(values[9]), // stock's exchange; NYQ->NYSE
         name: values[13],
         current: values[1],
         time: values[2] + values[3],
@@ -56,7 +90,7 @@ class Yahoo {
         previousClose: values[10],
         high52week: values[11],
         low52week: values[12],
-      });
+      };
     });
     return result;
   }
@@ -84,7 +118,7 @@ class Yahoo {
    * begin: start day timestamp
    * end: end day timestamp
    */
-  getKdata(symbol, period, begin, end) {
+  getKChart(symbol, period, begin, end) {
     //TODO
   }
 };

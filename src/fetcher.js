@@ -1,6 +1,5 @@
-import Yahoo from './worker/Yahoo';
-import Xueqiu from './worker/Xueqiu';
-
+import Yahoo from './worker/yahoo';
+import Xueqiu from './worker/xueqiu';
 import Constants from './utils/Constants';
 
 const xueqiu = new Xueqiu();
@@ -11,27 +10,25 @@ const workers = {
   yahoo: new Yahoo()
 };
 
-const currentWorker = 'xueqiu';
-
 const Fetcher = {
-  getRealtime(symbolArr) {
+  currentWorker: 'xueqiu',
+
+  // symbolArr can be an array of symbols or a single symbol string.
+  getRealtime(symbol1, symbol2) {
+    let symbolArr = [].slice.call(arguments);
     if ((symbolArr || []).length < 1) {
       throw Error('please provide at least 1 stock symbol.');
     }
-    workers[currentWorker].getRealtime(symbolArr).then((response) => {
-      console.log('realtime->', response);
-    });
+    return workers[Fetcher.currentWorker].getRealtime(symbolArr);
   },
 
-  getKchart(symbol, period, begin, end) {
+  getKChart(symbol, period, begin, end) {
     // TODO check arguments
     if (Constants.KchartPeriod.indexOf(period) < 0) {
       console.error('peroid is wrong, must be one of: ' + Constants.KchartPeriod.join(', '));
       return;
     }
-    workers[currentWorker].getKchart(symbol, period, begin, end).then((response) => {
-      console.log('kchart->', response);
-    });
+    return workers[Fetcher.currentWorker].getKChart(symbol, period, begin, end)
   }
 };
 

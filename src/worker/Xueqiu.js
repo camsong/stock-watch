@@ -44,12 +44,23 @@ class Xueqiu {
     return symbol;
   }
 
+  static rollbackSymbol(symbol) {
+    symbol = symbol.toUpperCase();
+    // 如果全是数字，加 HK
+    if (/^d+$/gi.test(symbol)) {
+      return 'HK' + symbol;
+    }
+    return symbol;
+  }
+
+  // return {BABA: {data}, SH30001: {2322}}
   formatRealtimeData(jsonData) {
-    let result = [];
+    let result = {};
     for(let symbol in jsonData) {
       const d = jsonData[symbol];
-      result.push({
-        symbol: d.symbol, //BABA
+      const symbol = this.constructor.rollbackSymbol(d.symbol);
+      result[symbol] = {
+        symbol: symbol, //BABA
         exchange: d.exchange, //NYSE
         name: d.name, //阿里巴巴
         current: d.current, //88
@@ -62,7 +73,7 @@ class Xueqiu {
         previousClose: d.last_close,
         high52week: d.high52week,
         low52week: d.low52week
-      });
+      };
     }
     return result;
   }
@@ -90,12 +101,18 @@ class Xueqiu {
     });
   }
 
+  formatKChartData(body) {
+    return {
+      list: body.chartlist
+    };
+  }
+
   /*
    * mode: day, month, week
    * begin: start day timestamp
    * end: end day timestamp
    */
-  getKchart(symbol, period, begin, end) {
+  getKChart(symbol, period, begin, end) {
     //http://xueqiu.com/stock/forchartk/stocklist.json?symbol=BABA&period=1month&type=normal&begin=1311130858058&end=1437274858058&_=1437274858058
     return new Vow.Promise((resolve, reject) => {
       this.loginPromise.then(() => {
@@ -108,7 +125,7 @@ class Xueqiu {
           try {
             body = JSON.parse(body);
             if (body.success === 'true') {
-              resolve(body.chartlist);
+              resolve(this.formatKChartData(body));
             } else {
               reject(body);
             }

@@ -4,7 +4,10 @@
   "description": "For the watch of Stock, Realtime stock price fetcher from global markets including China",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "lint": "eslint src test",
+    "test": "NODE_ENV=test mocha -t 5000 --compilers js:babel/register --recursive",
+    "test:watch": "NODE_ENV=test mocha -t 5000 --compilers js:babel/register --recursive --watch",
+    "test:cov": "babel-node ./node_modules/.bin/isparta cover ./node_modules/.bin/_mocha -t 5000 -- --recursive"
   },
   "bin": {
     "sw": "bin/sw.js"
@@ -32,9 +35,17 @@
     "url": "https://github.com/camsong/stock-watch/issues"
   },
   "homepage": "https://github.com/camsong/stock-watch#readme",
+  "devDependencies": {
+    "babel-eslint": "^3.1.23",
+    "eslint": "^1.0.0-rc-1",
+    "expect": "^1.8.0",
+    "express": "~4.13.1",
+    "mocha": "^2.2.5",
+    "isparta": "^3.0.2"
+  },
   "dependencies": {
     "babel": "~5.6.23",
-    "express": "~4.13.1",
+    "chai": "^3.1.0",
     "request": "^2.58.0",
     "tough-cookie": "^2.0.0",
     "vow": "^0.4.10"
