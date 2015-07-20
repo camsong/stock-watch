@@ -6,7 +6,7 @@ const realtimeUrl = 'http://download.finance.yahoo.com/d/quotes.csv';
 
 const Request = RequestOrigin.defaults({
   jar: true, // enable cookie
-  proxy: 'http://127.0.0.1:8888',
+  //proxy: 'http://127.0.0.1:8888',
   headers: {
     "User-Agent": 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/46.0.2457.0 Safari/537.36',
   }

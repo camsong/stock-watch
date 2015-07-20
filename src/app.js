@@ -5,6 +5,8 @@ import Stock from './models/stock';
 
 const app = express();
 
+app.set('port', (process.env.PORT || 5000));
+
 // configure app to use bodyParser()
 // this will let us get the data from a POST
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -127,6 +129,6 @@ app.delete('/stock/:symbol.json', (req, res) => {
   }
 });
 
-app.listen(8000, () => {
-  console.log('Server start at port 8000');
+app.listen(app.get('port'), function() {
+  console.log('StockWatch is running on port', app.get('port'));
 });

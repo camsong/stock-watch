@@ -7,7 +7,7 @@ const URL_KCHART = 'http://xueqiu.com/stock/forchartk/stocklist.json';
 
 const Request = RequestOrigin.defaults({
   jar: true, // enable cookie
-  proxy: 'http://127.0.0.1:8888',
+  //proxy: 'http://127.0.0.1:8888',
   headers: {
     Referer: 'http://xueqiu.com/',
     Accept: '*/*',
