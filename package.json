@@ -1,6 +1,6 @@
 {
   "name": "stock-watch",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "For the watch of Stock, Realtime stock price fetcher from global markets including China",
   "main": "index.js",
   "scripts": {

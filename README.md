@@ -57,6 +57,13 @@ npm run test:cov
 ```
 
 
+### Run as a server
+Start a http server on port `5555`:
+
+```
+node server.js
+```
+
 ### License
 
 MIT
