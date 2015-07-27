@@ -1,6 +1,10 @@
 import Fetcher from '../fetcher';
 import Vow, { Promise } from 'vow';
 
+
+let data = [
+];
+
 class Stock {
   constructor(obj) {
     this.symbol = obj.symbol;
@@ -10,6 +14,18 @@ class Stock {
 
   static getAll() {
     return data;
+  }
+
+  static checkSymbol(symbol) {
+    return new Promise((resolve, reject) => {
+      Fetcher.getRealtime(symbol).then(result => {
+        if (result[symbol] && result[symbol].name) {
+          resolve(result);
+        }
+      }, err => {
+        reject(err);
+      });
+    });
   }
 
   static fetchAll() {
@@ -83,7 +99,7 @@ class Stock {
 
   update(obj) {
     this.expectPrice = obj.expectPrice;
-    this.note = obj.note; 
+    this.note = obj.note;
     return this;
   }
 
@@ -97,10 +113,13 @@ class Stock {
   }
 }
 
-let data = [
-  new Stock({symbol: 'BABA', expectPrice: 223.12, note: 'Like this'}),
-  new Stock({symbol: 'WUBA', expectPrice: 80, note: 'I\'m rich'}),
-  new Stock({symbol: 'YY', expectPrice: 123.12, note: 'You can u up'})
-];
+// set default stocks
+['BABA', 'SZ002025', 'SZ002123', 'SZ002392', 'SH600696', 'SZ000430', 'SZ000716', 'SZ002291', 'SH600176'].forEach((symbol) => {
+  data.push(new Stock({
+    symbol: symbol,
+    expectPrice: Math.ceil(Math.random() * 100),
+    note: 'note here'
+  }));
+});
 
 export default Stock;

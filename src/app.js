@@ -1,6 +1,5 @@
 import express from 'express';
 import bodyParser from 'body-parser';
-import http from 'http';
 import Stock from './models/stock';
 
 const app = express();
@@ -17,6 +16,7 @@ app.use(bodyParser.json());
 app.all('*', function(req, res, next) {
    res.header("Access-Control-Allow-Origin", "*");
    res.header("Access-Control-Allow-Headers", "X-Requested-With");
+   res.header("Access-Control-Allow-Methods", "PUT, POST, GET, HEAD, DELETE, OPTIONS");
    next();
 });
 
@@ -51,16 +51,28 @@ app.post('/stocks.json', (req, res) => {
     return;
   }
 
-  let stock = Stock.create({symbol: symbol, expectPrice: expectPrice, note: note});
-  // retun the realtime data of that stock
-  stock.fetchRealtime().then((result) => {
-    res.json(result);
-  }, (err) => {
+  // check if stock available
+  Stock.checkSymbol(symbol).then(() => {
+    // success
+    let stock = Stock.create({symbol: symbol, expectPrice: expectPrice, note: note});
+    // retun the realtime data of that stock
+    stock.fetchRealtime().then((result) => {
+      res.json(result);
+    }, (err) => {
+      res.json({
+        code: 3,
+        error_message: err
+      });
+    });
+  }, () => {
+    // failed
     res.json({
       code: 1,
-      error_message: err
+      error_message: 'Symbol is wrong, please check again'
     });
+    return;
   });
+
 });
 
 // show detail of a stock
